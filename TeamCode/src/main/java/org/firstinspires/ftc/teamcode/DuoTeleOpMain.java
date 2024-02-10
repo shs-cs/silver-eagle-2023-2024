@@ -24,13 +24,16 @@ public class DuoTeleOpMain extends OpMode {
     private float lastClawPosition = 0;
 
 
-    public static final double GRIPPER_CLOSED_POSITION = 0.9;
-    public static final double GRIPPER_OPENED_POSITION = 0.80;
+    public static final double GRIPPER_CLOSED_POSITION = 1.0;
+    public static final double GRIPPER_OPENED_POSITION = 0.90;
 
 
 
     @Override
     public void init() {
+
+
+
         LeftFront = hardwareMap.dcMotor.get("LeftFront");
         RightFront = hardwareMap.dcMotor.get("RightFront");
         LeftRear = hardwareMap.dcMotor.get("LeftRear");
@@ -41,6 +44,9 @@ public class DuoTeleOpMain extends OpMode {
         AirplaneServo = hardwareMap.servo.get("AirplaneServo");
         GripperServo = hardwareMap.servo.get("GripperServo");
         WristServo = hardwareMap.servo.get("WristServo");
+
+        //GripperServo.setDirection(Servo.Direction.REVERSE);
+        GripperServo.setPosition(GRIPPER_CLOSED_POSITION);
 
 
 
@@ -76,13 +82,15 @@ public class DuoTeleOpMain extends OpMode {
         telemetry.addLine("--------------------");
         telemetry.addLine("Right bumper:" + gamepad2.right_bumper);
         telemetry.addLine("Left bumper:" + gamepad2.left_bumper);
+        telemetry.addLine("--------------------");
+        telemetry.addLine("Gripper Servo Position:" + GripperServo.getPosition());
 
     }
 
     public void handleAirplaneServo() {
 
         if (gamepad1.y) {
-            AirplaneServo.setPosition(0.365); // Set position to halfway (0.0 to 1.0)
+            AirplaneServo.setPosition(0.335); // Set position to halfway (0.0 to 1.0)
         }
 
 
@@ -97,11 +105,23 @@ public class DuoTeleOpMain extends OpMode {
 
     public void handleWristServo() //throws InterruptedException
     {
-
+        double currentPosition = WristServo.getPosition();
         if (gamepad2.y) {
-            WristServo.setPosition(0.44); // Set position to halfway (0.0 to 1.0)
+            WristServo.setPosition(0.345); // Set position to halfway (0.0 to 1.0)
             //LinearOpMode.sleep(500);
         }
+
+
+
+        if (gamepad2.b) {
+
+            double newPosition = currentPosition + 0.00005;
+            // Make sure the newPosition is within the valid range for the servo
+            newPosition = Math.min(1.0, Math.max(0.0, newPosition)); // Limit within [0, 1]
+            WristServo.setPosition(newPosition);
+        }
+
+
 
 
         if (gamepad2.x) {
@@ -109,29 +129,15 @@ public class DuoTeleOpMain extends OpMode {
             //LinearOpMode.sleep(500);
         }
 
-        telemetry.addLine("Left Trigger value: " + gamepad2.left_trigger);
-        telemetry.addLine("Right Trigger value: " + gamepad2.right_trigger);
 
 
-        double currentPosition = WristServo.getPosition();
-        telemetry.addLine("Wrist Servo Position: "+ currentPosition);
+        if (gamepad2.a) {
 
-
-        if (gamepad2.right_trigger == 1.0 && currentPosition <= 0.15) {
-
-            WristServo.setPosition(currentPosition + 0.1);
-            //Thread.sleep(250);
+            double newPosition = currentPosition - 0.00005;
+            // Make sure the newPosition is within the valid range for the servo
+            newPosition = Math.min(1.0, Math.max(0.0, newPosition)); // Limit within [0, 1]
+            WristServo.setPosition(newPosition);
         }
-
-        if (gamepad2.left_trigger == 1.0 && currentPosition >= 0) {
-            WristServo.setPosition(currentPosition - 0.1);
-            //Thread.sleep(250);
-
-
-        }
-
-
-
 
     }
 
@@ -145,20 +151,33 @@ public class DuoTeleOpMain extends OpMode {
             GripperServo.setPosition(GRIPPER_CLOSED_POSITION);
         }
 
+
+        if (gamepad2.right_trigger > 0.5) { // Assuming a threshold of 0.5 for the right trigger
+            double currentPosition = GripperServo.getPosition();
+            double newPosition = currentPosition + 0.001;
+            // Make sure the newPosition is within the valid range for the servo
+            newPosition = Math.min(1.0, Math.max(0.0, newPosition)); // Limit within [0, 1]
+            GripperServo.setPosition(newPosition);
+        }
+
+
+
         if (gamepad2.left_bumper) {
 
             GripperServo.setPosition(GRIPPER_OPENED_POSITION);
         }
 
 
+        if (gamepad2.left_trigger > 0.5) { // Assuming a threshold of 0.5 for the right trigger
+            double currentPosition = GripperServo.getPosition();
+            double newPosition = currentPosition - 0.001;
+            // Make sure the newPosition is within the valid range for the servo
+            newPosition = Math.min(1.0, Math.max(0.0, newPosition)); // Limit within [0, 1]
+            GripperServo.setPosition(newPosition);
+        }
+
+
     }
-
-
-
-
-
-
-
 
 
 
@@ -200,7 +219,7 @@ public class DuoTeleOpMain extends OpMode {
 
     public void handleWormMotor() {
         // Worm control with a maximum speed of 50%
-        double WormPower = -1.0 * getPower(gamepad2.left_stick_y);
+        double WormPower = -0.85 * getPower(gamepad2.left_stick_y);
 
         // Move the worm motor with the adjusted power
         if (WormPower != 0) {
@@ -223,6 +242,10 @@ public class DuoTeleOpMain extends OpMode {
         } else if (gamepad1.left_bumper) {
             // Stop the intake motor
             IntakeMotor.setPower(0);
+        }
+        else if (gamepad1.b)
+        {
+            IntakeMotor.setPower(-1.0);
         }
 
         // Add any additional logic or controls as needed

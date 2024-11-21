@@ -18,8 +18,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 public class PurePursuitSample extends CommandOpMode {
 
     // define our constants
-    static final double TRACKWIDTH = 13.7;
-    static final double WHEEL_DIAMETER = 4.0;    // inches
+    static final double TRACKWIDTH = 16.0;
+    static final double WHEEL_DIAMETER = 3.78;    // inches
     static double TICKS_TO_INCHES;
     static final double CENTER_WHEEL_OFFSET = 2.4;
 
@@ -32,17 +32,18 @@ public class PurePursuitSample extends CommandOpMode {
 
     @Override
     public void initialize() {
-        fL = new Motor(hardwareMap, "frontLeft");
-        fR = new Motor(hardwareMap, "frontRight");
-        bL = new Motor(hardwareMap, "backLeft");
-        bR = new Motor(hardwareMap, "backRight");
+        fL = new Motor(hardwareMap, "LeftFront");
+        fR = new Motor(hardwareMap, "RightFront");
+        bL = new Motor(hardwareMap, "LeftRear");
+        bR = new Motor(hardwareMap, "RightRear");
 
         // create our drive object
         m_robotDrive = new MecanumDrive(fL, fR, bL, bR);
 
-        leftEncoder = new MotorEx(hardwareMap, "leftEncoder");
-        rightEncoder = new MotorEx(hardwareMap, "rightEncoder");
-        centerEncoder = new MotorEx(hardwareMap, "centerEncoder");
+        leftEncoder = new MotorEx(hardwareMap, "OdomLeft");
+        rightEncoder = new MotorEx(hardwareMap, "OdomRight");
+        centerEncoder = new MotorEx(hardwareMap, "OdomCenter" +
+                "");
 
         // calculate multiplier
         TICKS_TO_INCHES = WHEEL_DIAMETER * Math.PI / leftEncoder.getCPR();
@@ -60,9 +61,9 @@ public class PurePursuitSample extends CommandOpMode {
         ppCommand = new PurePursuitCommand(
                 m_robotDrive, m_odometry,
                 new StartWaypoint(0, 0),
-                new GeneralWaypoint(200, 0, 0.8, 0.8, 30),
+                new GeneralWaypoint(100, 0, 0.8, 0.8, 30),
                 new EndWaypoint(
-                        400, 0, 0, 0.5,
+                        200, 0, 0, 0.5,
                         0.5, 30, 0.8, 1
                 )
         );

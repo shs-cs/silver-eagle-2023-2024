@@ -39,6 +39,10 @@ public class ServoTest extends OpMode
             TwistyTurnyServo.setPosition(0.0);
         }
 
+        if (gamepad1.b) {
+            WristServo.setPosition(0.0);
+        }
+
 
 
 

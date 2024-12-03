@@ -11,6 +11,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "DuoTeleOpMain", group = "TeleOp")
 public class DuoTeleOpMain extends OpMode {
 
+    public double GrabbingPosition = 0.0;
+    public double RestPosition = 0.92;
+    public double SpecimenPosition = 0.32;
+    public double HighBasketPosition = 0.32;
+    public double WristStraight = 0.0;
     private DcMotor LeftFront;
     private DcMotor RightFront;
     private DcMotor LeftRear;
@@ -21,6 +26,7 @@ public class DuoTeleOpMain extends OpMode {
     private Servo LeftGripperServo;
     private Servo RightGripperServo;
     private Servo WristServo;
+    private Servo TwistyTurnyServo;
 
     @Override
     public void init() {
@@ -32,6 +38,7 @@ public class DuoTeleOpMain extends OpMode {
         LeftGripperServo = hardwareMap.get(Servo.class, "LeftGripperServo");
         WristServo = hardwareMap.get(Servo.class, "WristServo");
         RightGripperServo = hardwareMap.get(Servo.class, "RightGripperServo");
+        TwistyTurnyServo = hardwareMap.get(Servo.class, "TwistyTurnyServo");
         RightGripperServo.setDirection(Servo.Direction.REVERSE);
         WristServo.setDirection(Servo.Direction.REVERSE);
 
@@ -87,12 +94,12 @@ public class DuoTeleOpMain extends OpMode {
 
     public void ViperSlideVroom() {
 
-        if (gamepad2.right_stick_y > 0.5) {
-            ViperMotor.setPower(0.7);
+        if (gamepad2.right_stick_y > 0.6) {
+            ViperMotor.setPower(0.8);
         }
 
-        if (gamepad2.right_stick_y < -0.5) {
-            ViperMotor.setPower(-0.7);
+        if (gamepad2.right_stick_y < -0.6) {
+            ViperMotor.setPower(-0.8);
         }
 
         if (gamepad2.right_stick_y == 0) {
@@ -107,44 +114,67 @@ public class DuoTeleOpMain extends OpMode {
 
     public void ServoGoVroom() {
 
-        if (gamepad2.right_bumper)
-        {
-            LeftGripperServo.setPosition(0.3); // Close left gripper
-            RightGripperServo.setPosition(0.3);
-        }
-
-
-
-        if (gamepad2.x)
-        {
-            WristServo.setPosition(0.0);
-        }
-
-        if (gamepad2.y)
-        {
-            WristServo.setPosition(0.20);
-        }
-
-        if (gamepad2.b)
-        {
-            WristServo.setPosition(0.92);
-        }
-
-
-
-
 
         if (gamepad2.left_bumper) {
             //WristServo.setPosition(0.5);
-            RightGripperServo.setPosition(0.4); // Mid po\sition for right gripper
+            RightGripperServo.setPosition(0.4); // open
             LeftGripperServo.setPosition(0.4);
             telemetry.addData("Right Gripper Position:", RightGripperServo.getPosition());
             telemetry.addData("Left Gripper Position:", LeftGripperServo.getPosition());
         }
 
+
+        if (gamepad2.right_bumper)
+        {
+            LeftGripperServo.setPosition(0.25); // Close
+            RightGripperServo.setPosition(0.25);
+        }
+
+        if(gamepad2.dpad_left)
+        {
+            TwistyTurnyServo.setPosition(0.3);
+        }
+
+        if(gamepad2.dpad_right)
+        {
+            TwistyTurnyServo.setPosition(WristStraight);
+        }
+
+        if (gamepad2.x)
+        {
+            WristServo.setPosition(GrabbingPosition);
+        }
+
+        if (gamepad2.y)
+        {
+            WristServo.setPosition(HighBasketPosition);
+        }
+
+        if (gamepad2.b && gamepad2.dpad_down)
+        {
+            WristServo.setPosition(RestPosition);
+        }
+
+        if (gamepad2.a)
+        {
+            WristServo.setPosition(SpecimenPosition);
+        }
+
+
+        if (gamepad2.left_trigger > 0.5) {
+            LeftGripperServo.setPosition(0.5);
+            RightGripperServo.setPosition(0.5); // Close right gripper
+            telemetry.addData("Left Gripper Position (A):", LeftGripperServo.getPosition());
+            telemetry.addData("Right Gripper Position (A):", RightGripperServo.getPosition());
+        }
+
+
+
+
+
         if (gamepad2.right_trigger > 0.5) {
-            LeftGripperServo.setPosition(0);
-            RightGripperServo.setPosition(0); // Close right gripper
+            LeftGripperServo.setPosition(0.4);
+            RightGripperServo.setPosition(0.4); // Close right gripper
             telemetry.addData("Left Gripper Position (A):", LeftGripperServo.getPosition());
             telemetry.addData("Right Gripper Position (A):", RightGripperServo.getPosition());
         }

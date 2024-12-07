@@ -107,11 +107,22 @@ public class DuoTeleOpMain extends OpMode {
         telemetry.update();
     }
 
+    public int lowBound = 50; // TODO change
+    public int highBound = 1000; // TODO change
+    public int slideMax = 500; // TODO change
 
     public void ViperSlideVroom() {
+        int armPosition = LeftArmMotor.getCurrentPosition();
+        int slidePosition = ViperMotor.getCurrentPosition();
+
+        boolean armVertical = armPosition >= highBound;
+        boolean armHorizontal = armPosition <= lowBound;
+        boolean slideAtMax = slidePosition >= slideMax;
 
         if (gamepad2.right_stick_y > 0.6) {
-            ViperMotor.setPower(0.8);
+            if (armVertical || (armHorizontal && !slideAtMax)) {
+                ViperMotor.setPower(0.8);
+            }
         }
 
         if (gamepad2.right_stick_y < -0.6) {
@@ -121,7 +132,6 @@ public class DuoTeleOpMain extends OpMode {
         if (gamepad2.right_stick_y == 0) {
             ViperMotor.setPower(0);
         }
-
 
         telemetry.addData("ViperMotor Power", ViperMotor.getPower());
         telemetry.update();
@@ -217,33 +227,40 @@ public class DuoTeleOpMain extends OpMode {
         }
     }
 
-    public void ArmGoVroom(){
+    public void ArmGoVroom() {
+        int slidePosition = ViperMotor.getCurrentPosition();
 
-        if (gamepad2.left_stick_y < -0.5)
-        {
-            LeftArmMotor.setPower(1.0);
-            RightArmMotor.setPower(1.0);
+        // Prevent arm from moving if slide is past max limit
+        if (slidePosition <= slideMax) {
+            if (gamepad2.left_stick_y < -0.5)
+            {
+                LeftArmMotor.setPower(1.0);
+                RightArmMotor.setPower(1.0);
 
-            telemetry.addData("LeftArmMotor Power:", LeftArmMotor.getPower());
-            telemetry.addData("RightArmMotor Power:", RightArmMotor.getPower());
-            telemetry.update();
+                telemetry.addData("LeftArmMotor Power:", LeftArmMotor.getPower());
+                telemetry.addData("RightArmMotor Power:", RightArmMotor.getPower());
+                telemetry.update();
 
+            }
+
+            if (gamepad2.left_stick_y > 0.5)
+            {
+                LeftArmMotor.setPower(-0.7);
+                RightArmMotor.setPower(-0.7);
+
+                telemetry.addData("LeftArmMotor Power:", LeftArmMotor.getPower());
+                telemetry.addData("RightArmMotor Power:", RightArmMotor.getPower());
+                telemetry.update();
+            }
+
+            if (gamepad2.left_stick_y == 0) {
+                LeftArmMotor.setPower(0);
+                RightArmMotor.setPower(0);
+            }
         }
 
-        if (gamepad2.left_stick_y > 0.5)
-        {
-            LeftArmMotor.setPower(-0.7);
-            RightArmMotor.setPower(-0.7);
 
-            telemetry.addData("LeftArmMotor Power:", LeftArmMotor.getPower());
-            telemetry.addData("RightArmMotor Power:", RightArmMotor.getPower());
-            telemetry.update();
-        }
 
-        if (gamepad2.left_stick_y == 0) {
-            LeftArmMotor.setPower(0);
-            RightArmMotor.setPower(0);
-        }
     }
     public double getPower(double powerLevel) {
 

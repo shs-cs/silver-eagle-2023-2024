@@ -66,6 +66,13 @@ public class DuoTeleOpMain extends OpMode {
         LeftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ViperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+
+        ViperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        ViperMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 
     @Override
@@ -75,6 +82,11 @@ public class DuoTeleOpMain extends OpMode {
         ArmGoVroom();
         ViperSlideVroom();
         ServoGoVroom();
+
+        telemetry.addData("ViperMotor Power", ViperMotor.getPower());
+        telemetry.addData("ViperMotor Position", ViperMotor.getCurrentPosition());
+        telemetry.addData("LeftArmMotor Power:", LeftArmMotor.getCurrentPosition());
+        telemetry.addData("RightArmMotor Power:", RightArmMotor.getCurrentPosition());
     }
 
     public void handleDriveTrain()
@@ -100,31 +112,32 @@ public class DuoTeleOpMain extends OpMode {
         LeftRear.setPower(powerLR);
         RightRear.setPower(powerRR);
 
-        telemetry.addData("RightFront Power:", RightFront.getPower());
-        telemetry.addData("LeftFront Power:", LeftFront.getPower());
-        telemetry.addData("RightRear Power:", RightRear.getPower());
-        telemetry.addData("LeftRear Power:", LeftRear.getPower());
-        telemetry.update();
+        //telemetry.addData("RightFront Power:", RightFront.getPower());
+        //telemetry.addData("LeftFront Power:", LeftFront.getPower());
+        //telemetry.addData("RightRear Power:", RightRear.getPower());
+        //telemetry.addData("LeftRear Power:", LeftRear.getPower());
+        //telemetry.update();
     }
 
-    public int lowBound = 50; // TODO change
-    public int highBound = 1000; // TODO change
-    public int slideMax = 500; // TODO change
+    public int lowBound = 1871; // TODO change
+    public int highBound = -1172; // TODO change
+    public int slideMax = -2000; // TODO change
 
     public void ViperSlideVroom() {
+
+
         int armPosition = LeftArmMotor.getCurrentPosition();
         int slidePosition = ViperMotor.getCurrentPosition();
 
-        boolean armVertical = armPosition >= highBound;
+        boolean armVertical = armPosition <= highBound && armPosition >= lowBound;
         boolean armHorizontal = armPosition <= lowBound;
-        boolean slideAtMax = slidePosition >= slideMax;
+        boolean slideAtMax = slidePosition >= slideMax && slidePosition <= 0;
 
         if (gamepad2.right_stick_y > 0.6) {
-            if (armVertical || (armHorizontal && !slideAtMax)) {
+            if (armVertical || (!slideAtMax)) {
                 ViperMotor.setPower(0.8);
             }
         }
-
         if (gamepad2.right_stick_y < -0.6) {
             ViperMotor.setPower(-0.8);
         }
@@ -133,91 +146,91 @@ public class DuoTeleOpMain extends OpMode {
             ViperMotor.setPower(0);
         }
 
-        telemetry.addData("ViperMotor Power", ViperMotor.getPower());
-        telemetry.update();
+
+        //telemetry.update();
     }
 
     public void ServoGoVroom() {
         if (gamepad2.left_bumper) {
             RightGripperServo.setPosition(ClawOpenNormalPos); // Open Right Gripper
             LeftGripperServo.setPosition(ClawOpenNormalPos); // Open Left Gripper
-            telemetry.addData("Right Gripper Position:", RightGripperServo.getPosition());
-            telemetry.addData("Left Gripper Position:", LeftGripperServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("Right Gripper Position:", RightGripperServo.getPosition());
+            //telemetry.addData("Left Gripper Position:", LeftGripperServo.getPosition());
+            //telemetry.update();
         }
         if (gamepad2.right_bumper)
         {
             LeftGripperServo.setPosition(ClawNomNom); // Close Left Gripper
             RightGripperServo.setPosition(ClawNomNom); // Close Right Gripper
-            telemetry.addData("Right Gripper Position:", RightGripperServo.getPosition());
-            telemetry.addData("Left Gripper Position:", LeftGripperServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("Right Gripper Position:", RightGripperServo.getPosition());
+            //telemetry.addData("Left Gripper Position:", LeftGripperServo.getPosition());
+            //telemetry.update();
         }
 
         if(gamepad2.dpad_left)
         {
             TwistyTurnyServo.setPosition(TwistyTurnySidePosition);
-            telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
+            //telemetry.update();
         }
 
         if(gamepad2.dpad_right)
         {
             TwistyTurnyServo.setPosition(TwistyTurnyStraight);
-            telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
+            //telemetry.update();
         }
 
 
         if(gamepad1.a)
         {
             TwistyTurnyServo.setPosition(TwistyTurnyStraight);
-            telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
+           // telemetry.update();
         }
         if(gamepad1.b)
         {
             TwistyTurnyServo.setPosition(TwistyTurnyFlipPosition);
-            telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
+            //telemetry.update();
         }
         if(gamepad2.dpad_up)
         {
             TwistyTurnyServo.setPosition(TwistyTurnyFlipPosition);
-            telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
+            //telemetry.update();
         }
         if (gamepad2.x)
         {
             WristServo.setPosition(WristGrabbingPosition);
-            telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
+            //telemetry.update();
         }
         if (gamepad2.y)
         {
             WristServo.setPosition(WristHighBasketPosition);
-            telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
+            //telemetry.update();
         }
         if (gamepad2.b && gamepad2.dpad_down)
         {
             WristServo.setPosition(WristRestPosition);
-            telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
+            //telemetry.update();
         }
         if (gamepad2.a)
         {
             WristServo.setPosition(WristBackScoringPosition);
-            telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
-            telemetry.update();
+            //telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
+            //telemetry.update();
         }
         if (gamepad2.left_trigger > 0.5)
         {
            LeftGripperServo.setPosition(ClawOpenWidePos);
            RightGripperServo.setPosition(ClawOpenWidePos);
-           telemetry.addData("Right Gripper Position:", RightGripperServo.getPosition());
-           telemetry.addData("Left Gripper Position:", LeftGripperServo.getPosition());
-           telemetry.update();
+           //telemetry.addData("Right Gripper Position:", RightGripperServo.getPosition());
+           //telemetry.addData("Left Gripper Position:", LeftGripperServo.getPosition());
+           //telemetry.update();
         }
         if (gamepad2.right_trigger > 0.5)
         {
@@ -231,15 +244,14 @@ public class DuoTeleOpMain extends OpMode {
         int slidePosition = ViperMotor.getCurrentPosition();
 
         // Prevent arm from moving if slide is past max limit
-        if (slidePosition <= slideMax) {
+        if (slidePosition >= slideMax) {
             if (gamepad2.left_stick_y < -0.5)
             {
                 LeftArmMotor.setPower(1.0);
                 RightArmMotor.setPower(1.0);
 
-                telemetry.addData("LeftArmMotor Power:", LeftArmMotor.getPower());
-                telemetry.addData("RightArmMotor Power:", RightArmMotor.getPower());
-                telemetry.update();
+
+
 
             }
 
@@ -248,9 +260,7 @@ public class DuoTeleOpMain extends OpMode {
                 LeftArmMotor.setPower(-0.7);
                 RightArmMotor.setPower(-0.7);
 
-                telemetry.addData("LeftArmMotor Power:", LeftArmMotor.getPower());
-                telemetry.addData("RightArmMotor Power:", RightArmMotor.getPower());
-                telemetry.update();
+
             }
 
             if (gamepad2.left_stick_y == 0) {

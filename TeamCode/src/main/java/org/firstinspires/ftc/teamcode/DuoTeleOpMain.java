@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class DuoTeleOpMain extends OpMode {
     //setting up motors and servos for use + Setting up Positions
     public double TwistyTurnySidePosition = 0.3;
-    public double TwistyTurnyFlipPosition = 0.65;
+    public double TwistyTurnyFlipPosition = 0.0; //0.675
     public double WristGrabbingPosition = 0.0;
     public double ClawOpenNormalPos =  0.37;
     public double ClawOpenWidePos = 0.47;
@@ -22,7 +22,7 @@ public class DuoTeleOpMain extends OpMode {
     public double WristSpecimenPosition = 0.32;
     public double WristBackScoringPosition = 0.485;
     public double WristHighBasketPosition = 0.32;
-    public double TwistyTurnyStraight = 0.0;
+    public double TwistyTurnyStraight = 0.675; //0.0
     private DcMotor LeftFront;
     private DcMotor RightFront;
     private DcMotor LeftRear;
@@ -105,9 +105,6 @@ public class DuoTeleOpMain extends OpMode {
         telemetry.addData("RightRear Power:", RightRear.getPower());
         telemetry.addData("LeftRear Power:", LeftRear.getPower());
         telemetry.update();
-
-
-
     }
 
 
@@ -131,18 +128,13 @@ public class DuoTeleOpMain extends OpMode {
     }
 
     public void ServoGoVroom() {
-
-
         if (gamepad2.left_bumper) {
-
             RightGripperServo.setPosition(ClawOpenNormalPos); // Open Right Gripper
             LeftGripperServo.setPosition(ClawOpenNormalPos); // Open Left Gripper
             telemetry.addData("Right Gripper Position:", RightGripperServo.getPosition());
             telemetry.addData("Left Gripper Position:", LeftGripperServo.getPosition());
             telemetry.update();
         }
-
-
         if (gamepad2.right_bumper)
         {
             LeftGripperServo.setPosition(ClawNomNom); // Close Left Gripper
@@ -173,56 +165,42 @@ public class DuoTeleOpMain extends OpMode {
             telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
             telemetry.update();
         }
-
-
         if(gamepad1.b)
         {
             TwistyTurnyServo.setPosition(TwistyTurnyFlipPosition);
             telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
             telemetry.update();
         }
-
-
-
-
-
         if(gamepad2.dpad_up)
         {
             TwistyTurnyServo.setPosition(TwistyTurnyFlipPosition);
             telemetry.addData("TwistyTurnyPosition:", TwistyTurnyServo.getPosition());
             telemetry.update();
         }
-
-
         if (gamepad2.x)
         {
             WristServo.setPosition(WristGrabbingPosition);
             telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
             telemetry.update();
         }
-
         if (gamepad2.y)
         {
             WristServo.setPosition(WristHighBasketPosition);
             telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
             telemetry.update();
         }
-
         if (gamepad2.b && gamepad2.dpad_down)
         {
             WristServo.setPosition(WristRestPosition);
             telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
             telemetry.update();
         }
-
         if (gamepad2.a)
         {
             WristServo.setPosition(WristBackScoringPosition);
             telemetry.addData("Wrist Servo Position:", WristServo.getPosition());
             telemetry.update();
         }
-
-
         if (gamepad2.left_trigger > 0.5)
         {
            LeftGripperServo.setPosition(ClawOpenWidePos);
@@ -231,9 +209,6 @@ public class DuoTeleOpMain extends OpMode {
            telemetry.addData("Left Gripper Position:", LeftGripperServo.getPosition());
            telemetry.update();
         }
-
-
-
         if (gamepad2.right_trigger > 0.5)
         {
 
@@ -255,8 +230,6 @@ public class DuoTeleOpMain extends OpMode {
 
         }
 
-
-
         if (gamepad2.left_stick_y > 0.5)
         {
             LeftArmMotor.setPower(-0.7);
@@ -271,11 +244,7 @@ public class DuoTeleOpMain extends OpMode {
             LeftArmMotor.setPower(0);
             RightArmMotor.setPower(0);
         }
-
-
-
     }
-
     public double getPower(double powerLevel) {
 
         if (powerLevel > 1) {

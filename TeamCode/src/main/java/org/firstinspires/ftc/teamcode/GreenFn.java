@@ -18,8 +18,8 @@ public class GreenFn extends LinearOpMode{
     public double WristRestPosition = 0.92;
     public double WristSpecimenPosition = 0.32;
     public double WristHighBasketPosition = 0.32;
-    public double TwistyTurnyWristStraight = 0.0;
-    public double TwistyTurnyFlipPosition = 0.65;
+    public double TwistyTurnyWristStraight = 0.675;
+    public double TwistyTurnyFlipPosition = 0.0;
     private DcMotor LeftFront;
     private DcMotor RightFront;
     private DcMotor LeftRear;
@@ -196,12 +196,12 @@ public class GreenFn extends LinearOpMode{
    public void ViperHighBasketPosition()
    {
 
-       ViperVroomUp(0.8,1810);
+       ViperVroomUp(0.8,1900);
    }
 
    public void ArmHighBasketPosition()
    {
-       ArmUp(1.0,1780);
+       ArmUp(1.0,1660); //1780
 
    }
 
@@ -213,10 +213,10 @@ public class GreenFn extends LinearOpMode{
 
     public void OneBasketAttempt() //Green fn
     {
-        StrafeTilesRight(1.2);
+        StrafeTilesRight(1.0); //1.2
         Pause(500);
 
-        TurnLeft(0.5,430);
+        TurnLeft(0.5,400); //430 org
         Pause(500);
 
         ArmHighBasketPosition();
@@ -228,7 +228,7 @@ public class GreenFn extends LinearOpMode{
         MoveWrist(WristHighBasketPosition);
         Pause(500);
 
-        MoveTiles(0.98);
+        MoveTiles(0.55);
         Pause(500);
 
         MoveTiles(0.1);
@@ -237,23 +237,31 @@ public class GreenFn extends LinearOpMode{
         clawOpen();
         Pause(500);
 
-        MoveTilesBackwards(0.7);
+        MoveTilesBackwards(0.15);
         Pause(500);
 
         ViperRestFromHighPosition();
         Pause(500);
 
-        ArmDown(1.0, 1000);
+        ArmDown(1.0, 950);
         Pause(500);
 
         TurnRight(0.5,390);
+        //TurnRight(0.9,1150);
         Pause(500);
 
         StrafeTilesRight(1.85);
+        //StrafeTilesLeft(1.8);
         Pause(500);
 
-        MoveTilesBackwards(0.8);
+        MoveTilesBackwards(0.5);
         Pause(500);
+
+       // ViperHighBasketPosition();
+        //Pause(500);
+
+        //MoveWrist(WristGrabbingPosition);
+        //Pause(500);
 
     }
 
@@ -290,12 +298,8 @@ public class GreenFn extends LinearOpMode{
             telemetry.addData("Left arm Position", LeftArmMotor.getCurrentPosition());
             telemetry.update();
         }
-
         RightArmMotor.setPower(0);
         LeftArmMotor.setPower(0);
-
-       // RightArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // LeftArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void SetViperSlidePosition(double power, int position){
@@ -321,8 +325,6 @@ public class GreenFn extends LinearOpMode{
     }
 
     public void MoveForwardPosition(double power, int position){
-
-        //ViperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         int targetPosition = (int) (position * countsPerInch);
 

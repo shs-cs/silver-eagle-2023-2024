@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-@TeleOp(name = "DuoTeleOpMain", group = "TeleOp")
-public class DuoTeleOpMain extends OpMode {
+import com.qualcomm.robotcore.hardware.Servo;
+
+@TeleOp(name = "TeleOpSandbox" , group = "TeleOp")
+public class TeleOpSandbox extends OpMode {
     //setting up motors and servos for use + Setting up Positions
    //public double BatteryLevel = hardwareMap.voltageSensor.iterator().next().getVoltage();
     public double TwistyTurnySidePosition = 0.3;

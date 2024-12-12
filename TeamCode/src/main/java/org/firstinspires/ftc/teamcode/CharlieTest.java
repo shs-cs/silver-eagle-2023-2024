@@ -5,16 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "MoveMultipleThingsTest", group = "Autonomous")
+@Autonomous(name = "CharlieTest", group = "Autonomous")
 
-public class MoveMultipleThingsTest extends LinearOpMode{
+public class CharlieTest extends LinearOpMode{
     //setting up motors and servos for use + Setting up Positions 
     public int ArmHighBasketPosition = -19;
     public int ArmSpecimenPosition = -80;
     public int ViperSlideSpecimenPosition = -25;
     public double WristGrabbingPosition = 0.0;
     public double ClawOpenNormalPosition =  0.37;
-    public double ClawOpenWidePosition = 0.5;
+    public double ClawOpenWidePosition = 0.4;
     public double ClawNomNom = 0.25;
     public double WristRestPosition = 0.92;
     public double WristSpecimenPosition = 0.32;
@@ -116,37 +116,26 @@ public class MoveMultipleThingsTest extends LinearOpMode{
         ScoreStartingSpecimen();
         ResetWheelEnoders();
 
-        StrafeLeftTiles(0.6, 5.7);
+        StrafeRightTiles(0.6, 2.5);
         ResetEncoders();
-        Pause(200);
 
-        TurnLeftDegreesTimer(1.0, 10, 500);
-        Pause(200);
+        TurnLeftDegrees(1.0, 180);
+        //TurnRightDegrees(1.0, 20);
+        Pause(500);
         ResetEncoders();
 
         clawOpenWide();
-        MoveWrist(WristGrabbingPosition);
 
-        MovebotAndMoveSlideAndRaiseArm(0.3,-13, 1.0, 22, 1.0, 47);
+        MoveWrist(WristSpecimenPosition);
+
+        MovebotAndMoveSlideAndRaiseArm(0.5,-6, 1.0, 22, 1.0, 37);
 
         clawClose();
-        Pause(200);
+        Pause(500);
         MoveWrist(BackwardsWristHighBasketPosition);
         ResetEncoders();
         Pause(200);
 
-        StrafeRightTiles(0.3, 0.35);
-        ResetWheelEnoders();
-        Pause(200);
-        TurnRightDegrees(1.0,30);
-        ResetWheelEnoders();
-        Pause(200);
-
-        MovebotAndRaiseArmAndMoveSlide(1.0,18,2000, 1.0,-89, 1.0, -67 );
-        ResetEncoders();
-        MoveTiles(1.0, -0.1);
-        clawOpen();
-        Pause(500);
 
 
 
@@ -163,7 +152,7 @@ public class MoveMultipleThingsTest extends LinearOpMode{
 
     public void ScoreStartingSpecimen()
     {
-        MovebotAndRaiseArmAndMoveSlide(1.0,-19, 2000, 1.0, ArmSpecimenPosition, -1.0, ViperSlideSpecimenPosition);
+        MovebotAndRaiseArmAndMoveSlide(1.0,-19, 1.0, ArmSpecimenPosition, -1.0, ViperSlideSpecimenPosition);
 
         MoveWrist(WristSpecimenPosition);
 
@@ -185,7 +174,7 @@ public class MoveMultipleThingsTest extends LinearOpMode{
 
     public void StrafeLeftTiles(double Power, double TileCount)
     {
-        StrafeLeftPosition(Power, (int)(24 * TileCount) ,1380);
+        StrafeLeftPosition(Power, (int)( 24 * TileCount) ,1300);
     }
 
     public void StrafeRightTiles(double Power, double TileCount)
@@ -199,7 +188,7 @@ public class MoveMultipleThingsTest extends LinearOpMode{
     }
 
 
-    public void TurnLeftDegrees(double power, int degrees) {
+    public void TurnLeftDegrees(double power, int degrees) { //chat gbt idubidubly assisted me (idk how to spell that)
         // Number of encoder counts for a 90 degree turn
         int basePositionFor90Degrees = 25;
 
@@ -208,17 +197,6 @@ public class MoveMultipleThingsTest extends LinearOpMode{
 
         // Call the TurnPosition method with the calculated target position
         TurnPosition(power, targetPosition);
-    }
-
-    public void TurnLeftDegreesTimer(double power, int degrees, long Milliseconds) {
-        // Number of encoder counts for a 90 degree turn
-        int basePositionFor90Degrees = 25;
-
-        // Calculate the target position based on the number of degrees to turn
-        int targetPosition = (int) (basePositionFor90Degrees * (degrees / 90.0));
-
-        // Call the TurnPosition method with the calculated target position
-        TurnPositionTimer(power, targetPosition, Milliseconds);
     }
 
 
@@ -239,9 +217,9 @@ public class MoveMultipleThingsTest extends LinearOpMode{
     }
 
 
-    public void MovebotAndRaiseArmAndMoveSlide(double MovePower, int MovePosition, long MoveTimer, double ArmPower, int ArmPosition, double ViperPower, int ViperPosition) {
+    public void MovebotAndRaiseArmAndMoveSlide(double MovePower, int MovePosition, double ArmPower, int ArmPosition, double ViperPower, int ViperPosition) {
 
-        MovePositionTimer(MovePower, MovePosition, MoveTimer); // This moves the robot
+            MovePosition(MovePower, MovePosition); // This moves the robot
 
             SetArmPosition(ArmPower, ArmPosition); // This moves the arm
 
@@ -358,6 +336,246 @@ public class MoveMultipleThingsTest extends LinearOpMode{
 
         ResetMotorsBackToNormalRunMode();
     }
+
+    public void StrafeLeftbotAndRaiseArmAndMoveSlide(double StrafePower, double TileCount, double ArmPower, int ArmPosition, double ViperPower, int ViperPosition) {
+
+        StrafeLeftTiles(StrafePower, TileCount); // This moves the robot
+
+        SetArmPosition(ArmPower, ArmPosition); // This moves the arm
+        //sleep(500);
+        SetViperSlidePosition(ViperPower, ViperPosition); // this moves the slide
+
+
+        while (opModeIsActive())
+        {
+
+            boolean RobotFinished = !RightFront.isBusy() && !LeftFront.isBusy() && !RightRear.isBusy() && !LeftRear.isBusy();
+
+            boolean ArmFinished = !RightArmMotor.isBusy() && !LeftArmMotor.isBusy();
+
+            boolean ViperSlideFinished = !ViperMotor.isBusy();
+
+            // If the robot, arm, and slide have finished doing their thing then stop
+            if (RobotFinished && ArmFinished && ViperSlideFinished)
+            {
+                break;
+            }
+
+            // show when the slide,arm, or robot are moving and when they stop
+            if (!RobotFinished)
+            {
+                telemetry.addData("The Robot is", "Moving");
+            }
+            else
+            {    telemetry.addData("The Robot is", "Finished Moving");
+
+            }
+
+            if (!ArmFinished)
+            {
+                telemetry.addData("The Arm is", "Moving");
+            }
+            else
+            {
+                telemetry.addData("The Arm is", "Finished Moving");
+            }
+
+            if (!ViperSlideFinished)
+            {
+                telemetry.addData("The Slide is", "Moving");
+            }
+            else
+            {
+                telemetry.addData("The Slide is", "Finished Moving");
+            }
+
+            telemetry.update();
+        }
+
+        stopMotors();
+
+        ResetMotorsBackToNormalRunMode();
+    }
+
+    public void StrafeRightbotAndRaiseArmAndMoveSlide(double StrafePower, double TileCount, double ArmPower, int ArmPosition, double ViperPower, int ViperPosition) {
+
+        StrafeRightTiles(StrafePower, TileCount); // This moves the robot
+
+        SetArmPosition(ArmPower, ArmPosition); // This moves the arm
+        //sleep(500);
+        SetViperSlidePosition(ViperPower, ViperPosition); // this moves the slide
+
+
+        while (opModeIsActive())
+        {
+
+            boolean RobotFinished = !RightFront.isBusy() && !LeftFront.isBusy() && !RightRear.isBusy() && !LeftRear.isBusy();
+
+            boolean ArmFinished = !RightArmMotor.isBusy() && !LeftArmMotor.isBusy();
+
+            boolean ViperSlideFinished = !ViperMotor.isBusy();
+
+            // If the robot, arm, and slide have finished doing their thing then stop
+            if (RobotFinished && ArmFinished && ViperSlideFinished)
+            {
+                break;
+            }
+
+            // show when the slide,arm, or robot are moving and when they stop
+            if (!RobotFinished)
+            {
+                telemetry.addData("The Robot is", "Moving");
+            }
+            else
+            {    telemetry.addData("The Robot is", "Finished Moving");
+
+            }
+
+            if (!ArmFinished)
+            {
+                telemetry.addData("The Arm is", "Moving");
+            }
+            else
+            {
+                telemetry.addData("The Arm is", "Finished Moving");
+            }
+
+            if (!ViperSlideFinished)
+            {
+                telemetry.addData("The Slide is", "Moving");
+            }
+            else
+            {
+                telemetry.addData("The Slide is", "Finished Moving");
+            }
+
+            telemetry.update();
+        }
+
+        stopMotors();
+
+        ResetMotorsBackToNormalRunMode();
+    }
+    public void TurnLeftbotAndRaiseArmAndMoveSlide(double TurnPower, int Degrees, double ArmPower, int ArmPosition, double ViperPower, int ViperPosition) {
+
+        TurnLeftDegrees(TurnPower, Degrees); // This moves the robot
+
+        SetArmPosition(ArmPower, ArmPosition); // This moves the arm
+        sleep(500);
+        SetViperSlidePosition(ViperPower, ViperPosition); // this moves the slide
+
+
+        while (opModeIsActive())
+        {
+
+            boolean RobotFinished = !RightFront.isBusy() && !LeftFront.isBusy() && !RightRear.isBusy() && !LeftRear.isBusy();
+
+            boolean ArmFinished = !RightArmMotor.isBusy() && !LeftArmMotor.isBusy();
+
+            boolean ViperSlideFinished = !ViperMotor.isBusy();
+
+            // If the robot, arm, and slide have finished doing their thing then stop
+            if (RobotFinished && ArmFinished && ViperSlideFinished)
+            {
+                break;
+            }
+
+            // show when the slide,arm, or robot are moving and when they stop
+            if (!RobotFinished)
+            {
+                telemetry.addData("The Robot is", "Moving");
+            }
+            else
+            {    telemetry.addData("The Robot is", "Finished Moving");
+
+            }
+
+            if (!ArmFinished)
+            {
+                telemetry.addData("The Arm is", "Moving");
+            }
+            else
+            {
+                telemetry.addData("The Arm is", "Finished Moving");
+            }
+
+            if (!ViperSlideFinished)
+            {
+                telemetry.addData("The Slide is", "Moving");
+            }
+            else
+            {
+                telemetry.addData("The Slide is", "Finished Moving");
+            }
+
+            telemetry.update();
+        }
+
+        stopMotors();
+
+        ResetMotorsBackToNormalRunMode();
+    }
+
+    public void TurnRightbotAndRaiseArmAndMoveSlide(double TurnPower, int Degrees, double ArmPower, int ArmPosition, double ViperPower, int ViperPosition) {
+
+        TurnRightDegrees(TurnPower, Degrees); // This moves the robot
+
+        SetArmPosition(ArmPower, ArmPosition); // This moves the arm
+        sleep(500);
+        SetViperSlidePosition(ViperPower, ViperPosition); // this moves the slide
+
+
+        while (opModeIsActive())
+        {
+
+            boolean RobotFinished = !RightFront.isBusy() && !LeftFront.isBusy() && !RightRear.isBusy() && !LeftRear.isBusy();
+
+            boolean ArmFinished = !RightArmMotor.isBusy() && !LeftArmMotor.isBusy();
+
+            boolean ViperSlideFinished = !ViperMotor.isBusy();
+
+            // If the robot, arm, and slide have finished doing their thing then stop
+            if (RobotFinished && ArmFinished && ViperSlideFinished)
+            {
+                break;
+            }
+
+            // show when the slide,arm, or robot are moving and when they stop
+            if (!RobotFinished)
+            {
+                telemetry.addData("The Robot is", "Moving");
+            }
+            else
+            {    telemetry.addData("The Robot is", "Finished Moving");
+
+            }
+
+            if (!ArmFinished)
+            {
+                telemetry.addData("The Arm is", "Moving");
+            }
+            else
+            {
+                telemetry.addData("The Arm is", "Finished Moving");
+            }
+
+            if (!ViperSlideFinished)
+            {
+                telemetry.addData("The Slide is", "Moving");
+            }
+            else
+            {
+                telemetry.addData("The Slide is", "Finished Moving");
+            }
+
+            telemetry.update();
+        }
+
+        stopMotors();
+
+        ResetMotorsBackToNormalRunMode();
+    }
+
 
     private void ResetMotorsBackToNormalRunMode()
     {
@@ -490,104 +708,6 @@ public class MoveMultipleThingsTest extends LinearOpMode{
        LeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
        RightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
        LeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public void MovePositionTimer(double power, int position, long timeoutMillis) {
-        int targetPosition = (int) (position * countsPerInch);
-        double Correction = 1.00;
-        targetPosition *= Correction;
-        int FinalTargetPosition = (int) targetPosition;
-
-        RightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        RightFront.setTargetPosition(FinalTargetPosition);
-        LeftFront.setTargetPosition(FinalTargetPosition);
-        RightRear.setTargetPosition(FinalTargetPosition);
-        LeftRear.setTargetPosition(FinalTargetPosition);
-
-        RightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        RightFront.setPower(power + 0.2);
-        LeftFront.setPower(power);
-        RightRear.setPower(power);
-        LeftRear.setPower(power);
-
-        long startTime = System.currentTimeMillis();
-        while (opModeIsActive() && (RightFront.isBusy() || LeftFront.isBusy() || RightRear.isBusy() || LeftRear.isBusy()) &&
-                (System.currentTimeMillis() - startTime < timeoutMillis)) {
-            telemetry.addData("Right Front Position", RightFront.getCurrentPosition());
-            telemetry.addData("Left Front Position", LeftFront.getCurrentPosition());
-            telemetry.addData("Right Rear Position", RightRear.getCurrentPosition());
-            telemetry.addData("Left Rear Position", LeftRear.getCurrentPosition());
-            telemetry.update();
-        }
-
-        RightFront.setPower(0);
-        LeftFront.setPower(0);
-        RightRear.setPower(0);
-        LeftRear.setPower(0);
-
-        ResetWheelEnoders();
-
-        RightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        LeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        RightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        LeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public void TurnPositionTimer(double power, int position, long timeoutMillis) {
-        int targetPosition = (int) (position * countsPerInch);
-        double Correction = 1.02;
-        targetPosition *= Correction;
-        int FinalTargetPosition = (int) targetPosition;
-
-        RightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        RightFront.setTargetPosition(-FinalTargetPosition);
-        LeftFront.setTargetPosition(FinalTargetPosition);
-        LeftRear.setTargetPosition(FinalTargetPosition);
-        RightRear.setTargetPosition(-FinalTargetPosition);
-
-        RightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        RightFront.setPower(-power);
-        LeftFront.setPower(power);
-        RightRear.setPower(-power);
-        LeftRear.setPower(power);
-
-        long startTime = System.currentTimeMillis();
-        while (opModeIsActive() && (RightFront.isBusy() || LeftFront.isBusy() || RightRear.isBusy() || LeftRear.isBusy()) &&
-                (System.currentTimeMillis() - startTime < timeoutMillis)) {
-            telemetry.addData("Right Front Position", RightFront.getCurrentPosition());
-            telemetry.addData("Left Front Position", LeftFront.getCurrentPosition());
-            telemetry.addData("Right Rear Position", RightRear.getCurrentPosition());
-            telemetry.addData("Left Rear Position", LeftRear.getCurrentPosition());
-            telemetry.update();
-        }
-
-        RightFront.setPower(0);
-        LeftFront.setPower(0);
-        RightRear.setPower(0);
-        LeftRear.setPower(0);
-
-        ResetWheelEnoders();
-
-        RightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        LeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        RightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        LeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void TurnPosition(double power, int position)

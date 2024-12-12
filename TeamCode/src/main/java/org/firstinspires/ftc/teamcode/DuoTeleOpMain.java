@@ -141,12 +141,12 @@ public class DuoTeleOpMain extends OpMode {
 
         if (gamepad2.right_stick_y > 0.6)
         {
-            ViperMotor.setPower(0.6);
+            ViperMotor.setPower(0.7);
         }
 
         if (gamepad2.right_stick_y < -0.6)
         {
-            ViperMotor.setPower(-0.6);
+            ViperMotor.setPower(-0.7);
         }
 
         if (gamepad2.right_stick_y == 0) {

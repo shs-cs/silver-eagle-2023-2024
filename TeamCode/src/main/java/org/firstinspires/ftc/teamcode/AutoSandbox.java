@@ -157,8 +157,6 @@ public class AutoSandbox extends LinearOpMode{
 
     public void TurnLeftDegrees(double power, int degrees) { //chat gbt idubidubly assisted me (idk how to spell that)
 
-        // Assuming TurnPosition(0.6, 25) turns the robot 90 degrees, let's calculate the corresponding position for the desired degrees.
-
         // Number of encoder counts for a 90 degree turn
         int basePositionFor90Degrees = 25;
 
@@ -171,9 +169,6 @@ public class AutoSandbox extends LinearOpMode{
 
 
     public void TurnRightDegrees(double power, int degrees) { //chat gbt idubidubly assisted me (idk how to spell that)
-
-        // Assuming TurnPosition(0.6, 25) turns the robot 90 degrees, let's calculate the corresponding position for the desired degrees.
-
         // Number of encoder counts for a 90 degree turn
         int basePositionFor90Degrees = -25;
 

@@ -42,8 +42,7 @@ public class PurePursuitSample extends CommandOpMode {
 
         leftEncoder = new MotorEx(hardwareMap, "OdomLeft");
         rightEncoder = new MotorEx(hardwareMap, "OdomRight");
-        centerEncoder = new MotorEx(hardwareMap, "OdomCenter" +
-                "");
+        centerEncoder = new MotorEx(hardwareMap, "OdomCenter" + "");
 
         // calculate multiplier
         TICKS_TO_INCHES = WHEEL_DIAMETER * Math.PI / leftEncoder.getCPR();

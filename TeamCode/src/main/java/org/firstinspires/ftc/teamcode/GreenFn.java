@@ -32,9 +32,12 @@ public class GreenFn extends LinearOpMode{
     private Servo WristServo;
     private Servo TwistyTurnyServo;
 
-    private static final int ticks = 1120;
+    private static final int ticks = 537; //1120
     private static final double gear_ratio = 1.0;
-    private static final double countsPerInch = ((ticks * gear_ratio )/(Math.PI *1.5));
+    private static final double wheelDiameter = 4.0; // Wheel diameter in inches
+
+    //private static final double countsPerInch = ((ticks * gear_ratio )/(Math.PI *1.5));
+    private static final double countsPerInch = (ticks * gear_ratio) / (Math.PI * wheelDiameter);
 
 
     @Override
@@ -69,60 +72,50 @@ public class GreenFn extends LinearOpMode{
         LeftArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RightArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        // Reset the encoders of all the motors
+        RightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ViperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        ViperMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RightArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
 //**************************** Put Initialization Code Under Here 0_0 ******************************
 
         TwistyTurnyServo.setPosition(TwistyTurnyWristStraight);
         clawClose();
         WristServo.setPosition(WristRestPosition);
 
-
-        /*LeftArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ViperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        RightArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ViperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-         */
+        telemetry.addData("Right Front Encoder", RightFront.getCurrentPosition());
+        telemetry.addData("Left Front Encoder", LeftFront.getCurrentPosition());
+        telemetry.addData("Right Rear Encoder", RightRear.getCurrentPosition());
+        telemetry.addData("Left Rear Encoder", LeftRear.getCurrentPosition());
+        telemetry.update();
 
 
         waitForStart();
 //***************************** Put Auto Code Under Here To Run :o (please work) *******************
-       // SetArmPosition(1,ArmSpecimenPosition);
-       // MoveForwardPosition(0.6, -5);
+
+
+        //StrafePosition(0.6,24);
+        ResetWheelEnoders();
+        //TurnPosition(0.6,25);
+        //ResetEnoders();
+        //MoveTiles(2);
         //Pause(500);
 
 
-        OneBasketAttempt();
-
-
-
-//     Specimen scoring auto (WORK IN PROGRESS)
-        /* MoveTiles(0.5);
-        Pause(500);
-        StrafeTilesLeft(0.5);
-        Pause(500);
-        ArmUp(1.0, 1000); // test to find the positioning for specimen scoring
-        Pause(500);
-        ViperVroomUp(0.8, 1000); // test to find the positioning for specimen scoring
-        Pause(500);
-        ArmUp(1.0,100); // test to find the positioning for specimen scoring
-        Pause(500);
-        ArmDown(1.0, 100); // test to find the positioning for specimen scoring
-        Pause(500);
-        clawOpen();
-        Pause(500);
-        MoveTilesBackwards(0.5);
-    */
+        //OneBasketAttempt();
 
 
 
@@ -146,6 +139,22 @@ public class GreenFn extends LinearOpMode{
         stopMotors();
     }
 
+    public void ResetWheelEnoders()
+    {
+        RightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+
+    /*public void MoveTiles(int TileCount)
+    {
+        MovePosition(0.6, -24 * TileCount);
+    }
+
+     */
+
 
     public void moveBackward(double power, int time)
     {
@@ -162,8 +171,6 @@ public class GreenFn extends LinearOpMode{
         LeftRear.setPower(0);
         RightRear.setPower(0);
     }
-
-
 
 
     public void TurnLeft(double power, int time){
@@ -201,9 +208,19 @@ public class GreenFn extends LinearOpMode{
 
    public void ArmHighBasketPosition()
    {
-       ArmUp(1.0,1660); //1780
+       ArmUp(1.0,1680); //1780
 
    }
+
+
+    public void ArmTouchPosition()
+    {
+        ArmUp(1.0,2000); //1780
+
+    }
+
+
+
 
     public void ViperRestFromHighPosition()
     {
@@ -228,7 +245,7 @@ public class GreenFn extends LinearOpMode{
         MoveWrist(WristHighBasketPosition);
         Pause(500);
 
-        MoveTiles(0.55);
+        MoveTiles(0.56);
         Pause(500);
 
         MoveTiles(0.1);
@@ -254,14 +271,12 @@ public class GreenFn extends LinearOpMode{
         //StrafeTilesLeft(1.8);
         Pause(500);
 
-        MoveTilesBackwards(0.5);
+        MoveTilesBackwards(0.9);
         Pause(500);
 
-       // ViperHighBasketPosition();
-        //Pause(500);
+       ArmTouchPosition();
+        Pause(500);
 
-        //MoveWrist(WristGrabbingPosition);
-        //Pause(500);
 
     }
 
@@ -280,75 +295,107 @@ public class GreenFn extends LinearOpMode{
 
     }
 
-    public void SetArmPosition(double power, int position){
+    public void SetArmPosition(double power, int position)
+    {
 
         int targetPosition = (int) (position * countsPerInch);
 
-        RightArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RightArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         RightArmMotor.setTargetPosition(targetPosition);
         LeftArmMotor.setTargetPosition(targetPosition);
 
+        RightArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         RightArmMotor.setPower(power);
         LeftArmMotor.setPower(power);
 
-        while(RightArmMotor.isBusy() && LeftArmMotor.isBusy()){
-            telemetry.addData("Right arm Position", RightArmMotor.getCurrentPosition());
-            telemetry.addData("Left arm Position", LeftArmMotor.getCurrentPosition());
+        while (opModeIsActive() && (RightArmMotor.isBusy() || LeftArmMotor.isBusy()))
+        {
+            telemetry.addData("Right Arm Position", RightArmMotor.getCurrentPosition());
+            telemetry.addData("Left Arm Position", LeftArmMotor.getCurrentPosition());
             telemetry.update();
         }
+
         RightArmMotor.setPower(0);
         LeftArmMotor.setPower(0);
+
+        RightArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
     }
 
-    public void SetViperSlidePosition(double power, int position){
-
-        //ViperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public void SetViperSlidePosition(double power, int position)
+    {
 
         int targetPosition = (int) (position * countsPerInch);
 
-        ViperMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double Correction = 1.00;
 
-        ViperMotor.setTargetPosition(targetPosition);
+        targetPosition *= Correction;
+
+        int FinalTargetPosition = (int) targetPosition;
+
+        ViperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        ViperMotor.setTargetPosition(FinalTargetPosition);
+
+        ViperMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         ViperMotor.setPower(power);
 
-        while(ViperMotor.isBusy())
+        while (opModeIsActive() && (ViperMotor.isBusy()))
         {
-            telemetry.addData("Viper Slide Position",  ViperMotor.getCurrentPosition());
+            telemetry.addData("Viper Motor Position", ViperMotor.getCurrentPosition());
             telemetry.update();
         }
 
         ViperMotor.setPower(0);
 
+        ViperMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 
-    public void MoveForwardPosition(double power, int position){
+    public void MovePosition(double power, int position)
+    {
 
         int targetPosition = (int) (position * countsPerInch);
 
-        RightFront.setTargetPosition(targetPosition);
-        LeftFront.setTargetPosition(targetPosition);
-        LeftRear.setTargetPosition(targetPosition);
-        RightRear.setTargetPosition(targetPosition);
+        double Correction = 1.00;
+
+        targetPosition *= Correction;
+
+        int FinalTargetPosition = (int) targetPosition;
+
+        RightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        RightFront.setTargetPosition(FinalTargetPosition);
+        LeftFront.setTargetPosition(FinalTargetPosition);
+        RightRear.setTargetPosition(FinalTargetPosition);
+        LeftRear.setTargetPosition(FinalTargetPosition);
 
         RightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         LeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         LeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        RightFront.setPower(power);
+        RightFront.setPower(power + 0.2);
         LeftFront.setPower(power);
         RightRear.setPower(power);
         LeftRear.setPower(power);
 
-        while(RightFront.isBusy() && LeftFront.isBusy() && RightRear.isBusy() && LeftRear.isBusy())
+        while (opModeIsActive() && (RightFront.isBusy() || LeftFront.isBusy() || RightRear.isBusy() || LeftRear.isBusy()))
         {
             telemetry.addData("Right Front Position", RightFront.getCurrentPosition());
-            telemetry.addData("Left Front Position", RightFront.getCurrentPosition());
-            telemetry.addData("Right Rear Position", RightFront.getCurrentPosition());
-            telemetry.addData("Left Rear Position", RightFront.getCurrentPosition());
+            telemetry.addData("Left Front Position", LeftFront.getCurrentPosition());
+            telemetry.addData("Right Rear Position", RightRear.getCurrentPosition());
+            telemetry.addData("Left Rear Position", LeftRear.getCurrentPosition());
             telemetry.update();
         }
 
@@ -357,8 +404,113 @@ public class GreenFn extends LinearOpMode{
         RightRear.setPower(0);
         LeftRear.setPower(0);
 
-        TurnLeft(0.3, 500);
+       RightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+       LeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+       RightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+       LeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
+
+
+    public void TurnPosition(double power, int position){
+
+        int targetPosition = (int) (position * countsPerInch);
+
+        double Correction = 1.02;
+        targetPosition *= Correction;
+
+        int FinalTargetPosition = (int) targetPosition;
+
+        RightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        RightFront.setTargetPosition(-FinalTargetPosition);
+        LeftFront.setTargetPosition(FinalTargetPosition);
+        LeftRear.setTargetPosition(FinalTargetPosition);
+        RightRear.setTargetPosition(-FinalTargetPosition);
+
+        RightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        RightFront.setPower(-power);
+        LeftFront.setPower(power);
+        RightRear.setPower(-power);
+        LeftRear.setPower(power);
+
+        while (opModeIsActive() && (RightFront.isBusy() || LeftFront.isBusy() || RightRear.isBusy() || LeftRear.isBusy()))
+        {
+            telemetry.addData("Right Front Position", RightFront.getCurrentPosition());
+            telemetry.addData("Left Front Position", LeftFront.getCurrentPosition());
+            telemetry.addData("Right Rear Position", RightRear.getCurrentPosition());
+            telemetry.addData("Left Rear Position", LeftRear.getCurrentPosition());
+            telemetry.update();
+        }
+
+        RightFront.setPower(0);
+        LeftFront.setPower(0);
+        RightRear.setPower(0);
+        LeftRear.setPower(0);
+
+        RightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+
+    public void StrafePosition(double power, int position){
+
+        int targetPosition = (int) (position * countsPerInch);
+
+        double Correction = 1.00;
+        targetPosition *= Correction;
+
+        int FinalTargetPosition = (int) targetPosition;
+
+        RightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LeftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        RightFront.setTargetPosition(FinalTargetPosition);
+        LeftFront.setTargetPosition(-FinalTargetPosition);
+        LeftRear.setTargetPosition(FinalTargetPosition);
+        RightRear.setTargetPosition(-FinalTargetPosition);
+
+        RightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        RightFront.setPower(power);
+        LeftFront.setPower(-power);
+        RightRear.setPower(-power);
+        LeftRear.setPower(power);
+
+        while (opModeIsActive() && (RightFront.isBusy() || LeftFront.isBusy() || RightRear.isBusy() || LeftRear.isBusy()))
+        {
+            telemetry.addData("Right Front Position", RightFront.getCurrentPosition());
+            telemetry.addData("Left Front Position", LeftFront.getCurrentPosition());
+            telemetry.addData("Right Rear Position", RightRear.getCurrentPosition());
+            telemetry.addData("Left Rear Position", LeftRear.getCurrentPosition());
+            telemetry.update();
+        }
+
+        RightFront.setPower(0);
+        LeftFront.setPower(0);
+        RightRear.setPower(0);
+        LeftRear.setPower(0);
+
+        RightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        RightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
 
     public void ArmDown(double power, int time)
     {
@@ -405,13 +557,15 @@ public class GreenFn extends LinearOpMode{
 
     }
 
-    public void MoveTiles(double amount)
+   public void MoveTiles(double amount)
     {
         moveForward(0.3, (int)(1390 * amount));
 
         stopMotors();
 
     }
+
+
 
 
     public void MoveTilesBackwards(double amount)
